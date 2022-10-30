@@ -1,55 +1,57 @@
-import React,{Component} from "react";
+import {useState} from "react";
 import propTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 
-let INISHIAL_STATE = {
-    name:'',
-    phone:'',
-}
+function  ContactForm  ({onAdd, onCheckUnique}) {
+    const [initial_state, setInitial_state] = useState({
+        name: "",
+        phone: "",
+    });
 
-class ContactForm  extends Component  {
-    state = INISHIAL_STATE;
-
-
-handleChangeForm = (event) =>{
+function handleChangeForm  (event) {
     const {name, value} = event.target;
-    this.setState({[name]:value});
+    setInitial_state(initial_state=>({...initial_state, [name]:value}));
 }
 
-handleFormSubmit = (event) => {
+function handleFormSubmit  (event)  {
     event.preventDefault()
     const id = nanoid();
-    const {name, phone} = this.state;
-    const {onAdd} = this.props;
-    const isValidateForm = this.validateForm();
-    if(!isValidateForm)return 
-    onAdd({id:id,name, phone})
+    // const {onAdd} = props;
+    const isValidateForm = validateForm();
+    if(isValidateForm){
+    let newContact = onAdd({id:id,name: initial_state.name, phone: initial_state.phone});
+    resetForm ();
+    return newContact}
 }
 
-validateForm = () => {
-    const {name, phone} = this.state;
-     const { onCheckUnique } = this.props;
-    if (!name || !phone){
+function validateForm () {
+        // const { onCheckUnique } = this.props;
+    if (!initial_state.name || !initial_state.phone){
         alert('Some field is empty')
         return false}
 
-    return onCheckUnique(name)
+    return onCheckUnique(initial_state.name)
     }
 
-resetForm = () => this.setState(INISHIAL_STATE)
+function resetForm () {
+    setInitial_state(initial_state=>({
+        name: '',
+        phone: '',
+    }))
+}
 
-    render() {
-        const {name, phone} = this.state;
+
+
         return(
-        <form onSubmit={this.handleFormSubmit}>
+        <form onSubmit={handleFormSubmit}>
             <label>Name
                 <input  
                 type="text"   
                 name="name"
                 pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                 title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                value={name}
-                onChange = {this.handleChangeForm}
+                value={initial_state.name}
+                onChange = {handleChangeForm}
                 required/>
             </label>
             <label>Phone
@@ -58,8 +60,8 @@ resetForm = () => this.setState(INISHIAL_STATE)
                 name="phone"
                 pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
                 title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                value={phone}
-                onChange = {this.handleChangeForm}
+                value={initial_state.phone}
+                onChange = {handleChangeForm}
                 required/>
             </label>
             <button type='submit'>Add contact</button>
@@ -67,7 +69,7 @@ resetForm = () => this.setState(INISHIAL_STATE)
         
     }
 
-}  
+
 
 export default ContactForm
 

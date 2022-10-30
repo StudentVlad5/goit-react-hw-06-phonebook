@@ -1,4 +1,4 @@
-import React,{ Component } from 'react';
+import { useState, useEffect} from 'react';
 import propTypes from 'prop-types';
 import Filter from './Filter/Filter'
 import ContactForm from './ContactForms/ContactForm';
@@ -10,39 +10,33 @@ import initialContacts from './initialContacts.json'
 
 let CheckState = Object.assign(initialContacts, JSON.parse(localStorage.getItem('initialContacts'))).sort(DynamicSort("name"))
 
-export default class App extends Component {
-state = {
-      contacts: CheckState,
-      filter:'',
-     }
+export default function App () {
+let [contacts, setContacts] = useState(CheckState);
+const [filter, setFilter] = useState('');
 
-componentDidUpdate() {
-LocalStorage(this.state.contacts);
-}   
+useEffect (()=> {
+LocalStorage(contacts);
+},[contacts])
   
-handleAddContact = (newContact) => {
-  this.setState(({contacts})=>({contacts : [...contacts, newContact],
-}))
+function handleAddContact (newContact) {
+  return setContacts((contacts)=>([...contacts, newContact]));
 }
 
-handleCheckUniqueContact = (name) => {
-  const {contacts} = this.state;
+function handleCheckUniqueContact (name) {
   const isExistContact = !!contacts.find(contact => contact.name === name);
   isExistContact && alert('Contact is already exist');
   return !isExistContact
 }
 
-handleRemoveContact = (id) => this.setState(({contacts})=>({contacts: contacts.filter(contact=>contact.id !== id)}))
+function handleRemoveContact (id) {setContacts((contacts)=>(contacts.filter(contact=>contact.id !== id)))}
 
-handleFilterChange = (filter) => this.setState({filter})
+function handleFilterChange (filter) {setFilter(filter)}
 
-getVisibleContacts = () => {
-const {contacts, filter} = this.state
-return contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase()))
+function getVisibleContacts () {
+  return (contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase())));
 } 
-  render() {
-   const {filter} = this.state;
-   const visibleContacts = this.getVisibleContacts();
+
+const visibleContacts = getVisibleContacts();
   return (
     <div
       style={{
@@ -54,15 +48,15 @@ return contacts.filter((contact) => contact.name.toLowerCase().includes(filter.t
         fontSize: 40,
         color: '#010101'
       }}>
-<ContactForm onAdd={this.handleAddContact} onCheckUnique={this.handleCheckUniqueContact}/>
+<ContactForm onAdd={handleAddContact} onCheckUnique={handleCheckUniqueContact}/>
 <h2>Contacts List: {visibleContacts.length}</h2>
-<h5>Find contact</h5><Filter filter={filter} onChange={this.handleFilterChange}/>
+<h5>Find contact</h5><Filter filter={filter} onChange={handleFilterChange}/>
 <div className="list_section">
-<ContactList contacts={visibleContacts} onRemove={this.handleRemoveContact}/>
+<ContactList contacts={visibleContacts} onRemove={handleRemoveContact}/>
 </div>
   </div>
-  );
-}}
+  )
+}
 
 App.propTypes = {
   state: propTypes.arrayOf(
