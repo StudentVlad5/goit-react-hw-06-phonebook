@@ -1,36 +1,42 @@
 import {useState} from "react";
 import propTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { addContact } from "../../redux/actions";
+import DynamicSort from '../DynamicSort/DynamicSort';
 
-function  ContactForm  ({onAdd, onCheckUnique}) {
+function  ContactForm  () {
     const [initial_state, setInitial_state] = useState({
         name: "",
         phone: "",
     });
+    const contacts = useSelector(state => state.sort(DynamicSort("name")));
+    const dispatch = useDispatch();
 
 function handleChangeForm  (event) {
     const {name, value} = event.target;
-    setInitial_state(initial_state=>({...initial_state, [name]:value}));
+    return setInitial_state(initial_state=>({...initial_state, [name]:value}));
 }
 
 function handleFormSubmit  (event)  {
     event.preventDefault()
     const id = nanoid();
-    // const {onAdd} = props;
     const isValidateForm = validateForm();
     if(isValidateForm){
-    let newContact = onAdd({id:id,name: initial_state.name, phone: initial_state.phone});
+    let newContact = {id:id,name: initial_state.name, phone: initial_state.phone};
     resetForm ();
-    return newContact}
-}
+    dispatch(addContact(newContact));
+}}
 
 function validateForm () {
-        // const { onCheckUnique } = this.props;
     if (!initial_state.name || !initial_state.phone){
         alert('Some field is empty')
         return false}
-
-    return onCheckUnique(initial_state.name)
+    if (contacts.filter(key=>key.name === initial_state.name).length > 0){
+     alert("contact already exist");
+    return false}
+    else return true
     }
 
 function resetForm () {
@@ -39,9 +45,6 @@ function resetForm () {
         phone: '',
     }))
 }
-
-
-
         return(
         <form onSubmit={handleFormSubmit}>
             <label>Name

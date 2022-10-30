@@ -1,34 +1,21 @@
-import { useState, useEffect} from 'react';
+import { useState } from 'react';
 import propTypes from 'prop-types';
-import Filter from './Filter/Filter'
+import Filter from './Filter/Filter';
 import ContactForm from './ContactForms/ContactForm';
 import ContactList from './ContactList/ContactList';
-import LocalStorage from './LocalStorage/LocalStorage';
-import DynamicSort from './DynamicSort/DynamicSort'
-import initialContacts from './initialContacts.json'
-
-
-let CheckState = Object.assign(initialContacts, JSON.parse(localStorage.getItem('initialContacts'))).sort(DynamicSort("name"))
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../redux/actions";
 
 export default function App () {
-let [contacts, setContacts] = useState(CheckState);
+
+const contacts = useSelector(state => state);
 const [filter, setFilter] = useState('');
+const dispatch = useDispatch();
 
-useEffect (()=> {
-LocalStorage(contacts);
-},[contacts])
-  
-function handleAddContact (newContact) {
-  return setContacts((contacts)=>([...contacts, newContact]));
+function handleRemoveContact (id) {
+  dispatch(deleteContact(id))
 }
-
-function handleCheckUniqueContact (name) {
-  const isExistContact = !!contacts.find(contact => contact.name === name);
-  isExistContact && alert('Contact is already exist');
-  return !isExistContact
-}
-
-function handleRemoveContact (id) {setContacts((contacts)=>(contacts.filter(contact=>contact.id !== id)))}
 
 function handleFilterChange (filter) {setFilter(filter)}
 
@@ -48,7 +35,7 @@ const visibleContacts = getVisibleContacts();
         fontSize: 40,
         color: '#010101'
       }}>
-<ContactForm onAdd={handleAddContact} onCheckUnique={handleCheckUniqueContact}/>
+<ContactForm/>
 <h2>Contacts List: {visibleContacts.length}</h2>
 <h5>Find contact</h5><Filter filter={filter} onChange={handleFilterChange}/>
 <div className="list_section">
