@@ -11,7 +11,7 @@ function  ContactForm  () {
         name: "",
         phone: "",
     });
-    const contacts = useSelector(state => state.sort(DynamicSort("name")));
+    const contacts = useSelector(state => state.contacts.sort(DynamicSort("name")));
     const dispatch = useDispatch();
 
 function handleChangeForm  (event) {

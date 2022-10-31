@@ -9,7 +9,7 @@ import { deleteContact } from "../redux/actions";
 
 export default function App () {
 
-const contacts = useSelector(state => state);
+const contacts = useSelector(state => state.contacts);
 const [filter, setFilter] = useState('');
 const dispatch = useDispatch();
 
