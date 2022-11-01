@@ -1,8 +1,7 @@
 import {useState} from "react";
 import propTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../redux/actions";
 import DynamicSort from '../DynamicSort/DynamicSort';
 
@@ -11,7 +10,7 @@ function  ContactForm  () {
         name: "",
         phone: "",
     });
-    const contacts = useSelector(state => state.contacts.sort(DynamicSort("name")));
+    const contacts = useSelector(state => [...state.contacts].sort(DynamicSort("name")));
     const dispatch = useDispatch();
 
 function handleChangeForm  (event) {
