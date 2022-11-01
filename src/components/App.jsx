@@ -1,23 +1,23 @@
-import { useState } from 'react';
 import propTypes from 'prop-types';
 import Filter from './Filter/Filter';
 import ContactForm from './ContactForms/ContactForm';
 import ContactList from './ContactList/ContactList';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { deleteContact } from "../redux/actions";
+import { deleteContact, setFilter} from "../redux/actions";
 
 export default function App () {
 
 const contacts = useSelector(state => state.contacts);
-const [filter, setFilter] = useState('');
+const filter = useSelector(state => state.filters);
+
 const dispatch = useDispatch();
 
 function handleRemoveContact (id) {
   dispatch(deleteContact(id))
 }
 
-function handleFilterChange (filter) {setFilter(filter)}
+function handleFilterChange (filter) {dispatch(setFilter(filter))}
 
 function getVisibleContacts () {
   return (contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase())));
