@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+
 import { createReducer } from "@reduxjs/toolkit";
 import { setFilter, deleteContact, addContact } from "./actions";
 
@@ -11,7 +11,7 @@ const initialContacts =
     {"id": "id-4", "name": "Annie Copeland","phone": "227-91-26"}
 ]
 
-const contactsReducer = createReducer (initialContacts,{
+export const contactsReducer = createReducer (initialContacts,{
 [deleteContact]: (state, action)=> {   
   const index = state.findIndex(contact => contact.id === action.payload);
   state.splice(index, 1)},
@@ -21,11 +21,7 @@ const contactsReducer = createReducer (initialContacts,{
 
 const filtersInitialState = '';
 
-const filtersReducer = createReducer(filtersInitialState, {
+export const filtersReducer = createReducer(filtersInitialState, {
 [setFilter]:(state, action)=> state = action.payload
 })
 
-export const rootReducer = combineReducers({
-contacts: contactsReducer,
-filters: filtersReducer,
-});
