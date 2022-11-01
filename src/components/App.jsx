@@ -1,10 +1,10 @@
-import propTypes from 'prop-types';
-import Filter from './Filter/Filter';
+import { useSelector, useDispatch } from "react-redux";
+import { deleteContact} from "../redux/contactsSlice";
+import { setFilter} from "../redux/filterSlice";
 import ContactForm from './ContactForms/ContactForm';
 import ContactList from './ContactList/ContactList';
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { deleteContact, setFilter} from "../redux/actions";
+import Filter from './Filter/Filter';
+import propTypes from 'prop-types';
 
 export default function App () {
 
