@@ -1,3 +1,5 @@
+import propTypes from 'prop-types';
+
 const Filter = ({filter, onChange}) => {
     return (
     <input 
@@ -10,3 +12,8 @@ const Filter = ({filter, onChange}) => {
 }
 
 export default Filter
+
+Filter.propTypes = {
+    filter: propTypes.string,
+    onChange: propTypes.func,
+}
