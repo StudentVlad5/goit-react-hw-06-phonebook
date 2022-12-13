@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../redux/contactsSlice";
 import DynamicSort from '../DynamicSort/DynamicSort';
 import { nanoid } from 'nanoid';
-import propTypes from 'prop-types';
 
 function  ContactForm  () {
     const [initial_state, setInitial_state] = useState({
@@ -74,9 +73,3 @@ function resetForm () {
 
 
 export default ContactForm
-
-ContactForm.propTypes = {
-    state: propTypes.arrayOf(
-        propTypes.string
-    )
-}
